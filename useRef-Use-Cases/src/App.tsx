@@ -1,34 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useRef, useState } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState<number>(0);
+  const [number, setNumber] = useState<number>(0);
+
+  const numberRef = useRef<number>(0);
+  const buttonRef = useRef<HTMLInputElement>(null);
+  const oldCounterRef = useRef<any>();
+
+
+  // not re render component
+  useEffect(() => {
+    numberRef.current = Math.random();
+  });
+
+  // ref to DOM elements
+  useEffect(() => {
+    buttonRef.current?.click();
+  },[]);
+
+  // last value ref
+  useEffect(() => {
+    oldCounterRef.current = count;
+  },[count]);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button ref={buttonRef} onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <p> the old counter is {oldCounterRef.current} </p>
+        <p> number is {number} </p>
+        <p> ref is {numberRef.current} </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
